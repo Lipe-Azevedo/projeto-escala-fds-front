@@ -1,56 +1,41 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+// CORREÇÃO NO CAMINHO DO IMPORT:
+import { useAuth } from '../../contexts/auth-context'; // Ajustado para dois níveis acima e depois para contexts
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null); 
+  const [isFormLoading, setIsFormLoading] = useState(false);
+  
+  const { login, isLoggedIn, currentUser, isLoading: authIsLoading } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!authIsLoading && isLoggedIn()) {
+      if (currentUser?.user_type === 'master') {
+        router.push('/master/dashboard');
+      } else if (currentUser?.user_type === 'colaborador') {
+        router.push('/collaborator/dashboard');
+      }
+    }
+  }, [authIsLoading, isLoggedIn, currentUser, router]);
+
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    setIsFormLoading(true);
+    setFormError(null);
 
     try {
-      const response = await fetch(`${apiUrl}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || `Erro ${response.status}: ${data.error || 'Falha no login'}`);
-      }
-
-      if (data.token && data.user) {
-        localStorage.setItem('authToken', data.token);
-        localStorage.setItem('currentUser', JSON.stringify(data.user));
-
-        if (data.user.user_type === 'master') {
-          router.push('/master/dashboard'); // Rota placeholder para o dashboard do master
-        } else {
-          setError('Este login é destinado apenas para usuários Master.');
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('currentUser');
-        }
-      } else {
-        throw new Error('Resposta de login inválida do servidor.');
-      }
-
+      await login({ email, password });
     } catch (err: any) {
-      setError(err.message || 'Falha ao tentar fazer login.');
+      setFormError(err.message || 'Falha ao tentar fazer login.');
     } finally {
-      setIsLoading(false);
+      setIsFormLoading(false);
     }
   };
 
@@ -91,15 +76,15 @@ export default function LoginPage() {
               placeholder="Sua senha"
             />
           </div>
-          {error && (
-            <p className="text-red-400 text-xs italic mb-4 text-center">{error}</p>
+          {formError && (
+            <p className="text-red-400 text-xs italic mb-4 text-center">{formError}</p>
           )}
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isFormLoading || authIsLoading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Entrando...' : 'Entrar'}
+            {(isFormLoading || authIsLoading) ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
       </div>

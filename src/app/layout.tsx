@@ -1,12 +1,13 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+// Ajuste o caminho do import para refletir o nome do arquivo kebab-case
+import { AuthProvider } from '../contexts/auth-context'; 
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Projeto Escala FDS", // Atualize o título
+  title: "Projeto Escala FDS",
   description: "Gerenciamento de Escalas de Trabalho",
 };
 
@@ -17,8 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.className} bg-gray-900 text-gray-100 antialiased`}> {/* Exemplo de tema escuro */}
-        {children}
+      <body className={`${inter.className} bg-gray-900 text-gray-100 antialiased`}>
+        <AuthProvider> {/* Envolve com AuthProvider */}
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
