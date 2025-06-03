@@ -43,7 +43,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-100">
       <div className="p-8 bg-gray-800 rounded-lg shadow-xl w-full max-w-sm">
         <h2 className="text-2xl font-semibold text-center text-white mb-6">
-          Login - Área Restrita
+          Login
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
