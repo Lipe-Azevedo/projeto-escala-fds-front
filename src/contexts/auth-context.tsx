@@ -73,12 +73,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json(); // Lê o corpo da resposta JSON
 
       if (!response.ok) {
-        // Se a resposta não foi OK, 'data' é o nosso objeto de erro da API
-        const errorData = data as ApiErrorResponse; // Faz o type assertion para nossa interface de erro
+        const errorData = data as ApiErrorResponse;
         throw new Error(errorData.message || `Erro ${response.status}: ${errorData.error || 'Falha no login'}`);
       }
 
-      // Se a resposta foi OK, 'data' é o nosso AuthResponse
       const authData = data as AuthResponse;
 
       if (authData.token && authData.user) {
@@ -128,10 +126,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isMaster = (): boolean => {
     return !!currentUser && currentUser.user_type === 'master';
   };
-  
+
   useEffect(() => {
     if (!isLoading && !isLoggedIn() && pathname !== '/login' && !pathname.startsWith('/public')) {
-      // router.push('/login'); // Comentado
+      // router.push('/login'); // Comentado para não ser agressivo durante o desenvolvimento inicial das páginas
     }
   }, [isLoading, token, currentUser, pathname, router]);
 

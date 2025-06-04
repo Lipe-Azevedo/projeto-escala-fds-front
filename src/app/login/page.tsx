@@ -2,8 +2,8 @@
 
 import { useState, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-// CORREÇÃO NO CAMINHO DO IMPORT:
-import { useAuth } from '../../contexts/auth-context'; // Ajustado para dois níveis acima e depois para contexts
+// Ajustado para importar de 'auth-context.tsx'
+import { useAuth } from '../../contexts/auth-context'; 
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -76,12 +76,12 @@ export default function LoginPage() {
               placeholder="Sua senha"
             />
           </div>
-          {formError && (
+          {formError && ( 
             <p className="text-red-400 text-xs italic mb-4 text-center">{formError}</p>
           )}
           <button
             type="submit"
-            disabled={isFormLoading || authIsLoading}
+            disabled={isFormLoading || authIsLoading} 
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {(isFormLoading || authIsLoading) ? 'Entrando...' : 'Entrar'}

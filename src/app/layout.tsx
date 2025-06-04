@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-// Ajuste o caminho do import para refletir o nome do arquivo kebab-case
+import "./globals.css"; //
+// Ajustado para importar de 'auth-context.tsx'
 import { AuthProvider } from '../contexts/auth-context'; 
 
 const inter = Inter({ subsets: ["latin"] });

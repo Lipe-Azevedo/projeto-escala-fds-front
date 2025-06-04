@@ -9,5 +9,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/'], // Aplica este middleware apenas à rota raiz
+  matcher: ['/'], 
 };
